@@ -4,6 +4,8 @@ import SignUp from './components/auth/SignUp';
 import Login from './components/auth/Login';
 import Dashboard from './pages/Dashboard';
 import CompleteProfile from './components/profile/CompleteProfile'; 
+import ForgotPassword from './components/auth/ForgotPassword';
+
 
 
 function App() {
@@ -14,6 +16,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/complete-profile" element={<CompleteProfile />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </Router>
   );
