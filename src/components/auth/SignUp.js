@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { auth } from '../firebase';  
+import { auth } from '../../firebase';  
 import { createUserWithEmailAndPassword } from 'firebase/auth';  
+import { useNavigate } from 'react-router-dom';
+
 import './SignUp.css';
 
 function SignUp() {
@@ -10,11 +12,14 @@ function SignUp() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    // Validation
+   
     if (!email || !password || !confirmPassword) {
       setError('All fields are required!');
       return;
@@ -28,9 +33,10 @@ function SignUp() {
     try {
       setLoading(true);
       await createUserWithEmailAndPassword(auth, email, password);
-      console.log('User has successfully signed up.');
-
-    } catch (err) {
+      console.log('User created successfully!');
+      navigate('/dashboard'); 
+    }
+     catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
@@ -72,6 +78,10 @@ function SignUp() {
         <button type="submit" disabled={loading}>
           {loading ? 'Signing Up...' : 'Sign Up'}
         </button>
+        <div className="login-link">
+         Already have an account? <a href="/login">Login</a>
+        </div>
+
       </form>
     </div>
   );
