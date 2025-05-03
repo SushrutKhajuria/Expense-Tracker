@@ -5,6 +5,8 @@ import Login from './components/auth/Login';
 import Dashboard from './pages/Dashboard';
 import CompleteProfile from './components/profile/CompleteProfile'; 
 import ForgotPassword from './components/auth/ForgotPassword';
+import ProtectedRoute from './components/ProtectedRoute';
+import ExpenseTracker from './pages/ExpenseTracker';
 
 
 
@@ -17,6 +19,16 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/complete-profile" element={<CompleteProfile />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+
+        <Route 
+        path="/expenses" 
+        element={
+          <ProtectedRoute>
+            <ExpenseTracker />
+          </ProtectedRoute>
+          } 
+        />
+
       </Routes>
     </Router>
   );
