@@ -16,6 +16,19 @@ const expensesSlice = createSlice({
     setExpenses(state, action) {
       state.expenses = action.payload.expenses;
       state.totalAmount = action.payload.totalAmount;
+    },
+    updateExpense(state, action) {
+      const { id, updatedExpense, amountDiff } = action.payload;
+      const index = state.expenses.findIndex(exp => exp.id === id);
+      if (index !== -1) {
+        state.expenses[index] = updatedExpense;
+        state.totalAmount += amountDiff;
+      }
+    },
+    deleteExpense(state, action) {
+      const { id, amount } = action.payload;
+      state.expenses = state.expenses.filter(exp => exp.id !== id);
+      state.totalAmount -= amount;
     }
   }
 });

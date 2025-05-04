@@ -36,3 +36,19 @@
     transform: rotate(360deg);
   }
 }
+
+.dark-theme {
+  background-color: #121212;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+.dark-theme a {
+  color: #bb86fc;
+}
+
+.dark-theme button {
+  background-color: #3700b3;
+  color: white;
+}
+

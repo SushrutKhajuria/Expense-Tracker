@@ -3,6 +3,7 @@ import { auth, db } from '../firebase';
 import { ref, push, onValue, off, update, remove } from 'firebase/database';
 import { useSelector, useDispatch } from 'react-redux';
 import { expensesActions } from '../store/expensesSlice';
+import { themeActions } from '../store/themeSlice';
 import './ExpenseTracker.css';
 
 function ExpenseTracker() {
@@ -11,11 +12,13 @@ function ExpenseTracker() {
   const [category, setCategory] = useState('Food');
   const [loading, setLoading] = useState(false);
   const [editingExpense, setEditingExpense] = useState(null);
+  const [isPremiumActivated, setIsPremiumActivated] = useState(false);
   
   const dispatch = useDispatch();
   const expenses = useSelector(state => state.expenses.expenses);
   const totalAmount = useSelector(state => state.expenses.totalAmount);
   const userId = useSelector(state => state.auth.userId);
+  const isDarkTheme = useSelector(state => state.theme.isDarkTheme);
 
   // Fetch expenses from Firebase
   useEffect(() => {
@@ -116,12 +119,48 @@ function ExpenseTracker() {
     }
   };
 
+  // Download expenses as CSV
+  const downloadExpenses = () => {
+    const csvContent = [
+      'Amount,Description,Category,Date',
+      ...expenses.map(exp => 
+        `${exp.amount},"${exp.description}",${exp.category},${new Date(exp.date).toLocaleDateString()}`
+      )
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'expenses.csv';
+    link.click();
+  };
+
+  // Activate premium features
+  const activatePremium = () => {
+    setIsPremiumActivated(true);
+  };
+
   return (
-    <div className="expense-tracker">
-      {totalAmount > 10000 && (
-        <button className="premium-button">
+    <div className={`expense-tracker ${isDarkTheme ? 'dark-theme' : ''}`}>
+      {totalAmount > 10000 && !isPremiumActivated && (
+        <button className="premium-button" onClick={activatePremium}>
           Activate Premium Features
         </button>
+      )}
+
+      {isPremiumActivated && (
+        <div className="premium-features">
+          <button 
+            className="theme-toggle"
+            onClick={() => dispatch(themeActions.toggleTheme())}
+          >
+            {isDarkTheme ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+          </button>
+          <button className="download-button" onClick={downloadExpenses}>
+            Download Expenses as CSV
+          </button>
+        </div>
       )}
       
       <h2>Add Daily Expense</h2>
