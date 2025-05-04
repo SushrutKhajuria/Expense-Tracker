@@ -9,6 +9,7 @@ function ExpenseTracker() {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('Food');
   const [loading, setLoading] = useState(false);
+  const [editingExpense, setEditingExpense] = useState(null);
 
   // CREATE
   const handleSubmit = async (e) => {
@@ -52,9 +53,17 @@ function ExpenseTracker() {
   }, []);
 
   // UPDATE
-  const handleUpdate = async (expenseId, newData) => {
+  const handleUpdate = async (e) => {
+    e.preventDefault();
     try {
-      await update(ref(db, `expenses/${expenseId}`), newData);
+      await update(ref(db, `expenses/${editingExpense.id}`), {
+        amount: parseFloat(editingExpense.amount),
+        description: editingExpense.description,
+        category: editingExpense.category,
+        date: editingExpense.date,
+        userId: editingExpense.userId
+      });
+      setEditingExpense(null);
     } catch (err) {
       console.error("Error updating expense:", err);
     }
@@ -62,10 +71,13 @@ function ExpenseTracker() {
 
   // DELETE
   const handleDelete = async (expenseId) => {
-    try {
-      await remove(ref(db, `expenses/${expenseId}`));
-    } catch (err) {
-      console.error("Error deleting expense:", err);
+    if (window.confirm("Delete this expense?")) {
+      try {
+        await remove(ref(db, `expenses/${expenseId}`));
+        console.log("Expense successfully deleted");
+      } catch (err) {
+        console.error("Error deleting expense:", err);
+      }
     }
   };
 
@@ -130,35 +142,75 @@ function ExpenseTracker() {
               .filter(exp => exp.userId === auth.currentUser?.uid)
               .map((expense) => (
                 <li key={expense.id} className="expense-item">
-                  <div className="expense-details">
-                    <span className="amount">₹{expense.amount.toFixed(2)}</span>
-                    <span className="description">{expense.description}</span>
-                    <span className="category">{expense.category}</span>
-                    <span className="date">
-                      {new Date(expense.date).toLocaleDateString()}
-                    </span>
-                  </div>
-                  
-                  <div className="expense-actions">
-                    <button 
-                      onClick={() => handleUpdate(expense.id, { 
-                        description: prompt("New description:", expense.description) || expense.description
-                      })}
-                      className="edit-btn"
-                    >
-                      Edit
-                    </button>
-                    <button 
-                      onClick={() => {
-                        if (window.confirm("Delete this expense?")) {
-                          handleDelete(expense.id);
-                        }
-                      }}
-                      className="delete-btn"
-                    >
-                      Delete
-                    </button>
-                  </div>
+                  {editingExpense?.id === expense.id ? (
+                    <form onSubmit={handleUpdate} className="edit-form">
+                      <input
+                        type="number"
+                        value={editingExpense.amount}
+                        onChange={(e) => setEditingExpense({
+                          ...editingExpense,
+                          amount: e.target.value
+                        })}
+                        min="0"
+                        step="0.01"
+                      />
+                      <input
+                        type="text"
+                        value={editingExpense.description}
+                        onChange={(e) => setEditingExpense({
+                          ...editingExpense,
+                          description: e.target.value
+                        })}
+                      />
+                      <select
+                        value={editingExpense.category}
+                        onChange={(e) => setEditingExpense({
+                          ...editingExpense,
+                          category: e.target.value
+                        })}
+                      >
+                        <option value="Food">Food</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      <button type="submit" className="save-btn">Save</button>
+                      <button 
+                        type="button" 
+                        onClick={() => setEditingExpense(null)}
+                        className="cancel-btn"
+                      >
+                        Cancel
+                      </button>
+                    </form>
+                  ) : (
+                    <>
+                      <div className="expense-details">
+                        <span className="amount">₹{expense.amount.toFixed(2)}</span>
+                        <span className="description">{expense.description}</span>
+                        <span className="category">{expense.category}</span>
+                        <span className="date">
+                          {new Date(expense.date).toLocaleDateString()}
+                        </span>
+                      </div>
+                      
+                      <div className="expense-actions">
+                        <button 
+                          onClick={() => setEditingExpense(expense)}
+                          className="edit-btn"
+                        >
+                          Edit
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(expense.id)}
+                          className="delete-btn"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </li>
               ))}
           </ul>

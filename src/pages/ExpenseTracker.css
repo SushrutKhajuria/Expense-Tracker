@@ -1,5 +1,5 @@
 .expense-tracker {
-    max-width: 600px;
+    max-width: 800px;
     margin: 20px auto;
     padding: 20px;
     background: #fff;
@@ -33,18 +33,21 @@
   }
   
   button {
-    width: 100%;
-    padding: 12px;
-    background-color: #28a745;
-    color: white;
+    padding: 10px 15px;
     border: none;
     border-radius: 4px;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 5px;
   }
   
-  button:hover {
+  button[type="submit"] {
+    width: 100%;
+    background-color: #28a745;
+    color: white;
+  }
+  
+  button[type="submit"]:hover {
     background-color: #218838;
   }
   
@@ -60,43 +63,11 @@
   .expense-item {
     display: flex;
     justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #f5f5f5;
-  }
-  
-  .expense-item .amount {
-    color: #dc3545;
-    font-weight: bold;
-    width: 80px;
-  }
-  
-  .expense-item .description {
-    flex-grow: 1;
-    padding: 0 15px;
-  }
-  
-  .expense-item .category {
-    background: #f0f0f0;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  .expense-item .date {
-    color: #6c757d;
-    font-size: 14px;
-    width: 80px;
-    text-align: right;
-  }
-
-  .expense-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px;
-    margin: 8px 0;
+    padding: 15px;
+    margin: 10px 0;
     background: #f8f9fa;
     border-radius: 4px;
+    align-items: center;
   }
   
   .expense-details {
@@ -116,9 +87,13 @@
     color: #dc3545;
   }
   
+  .description {
+    flex: 1;
+  }
+  
   .category {
     background: #e9ecef;
-    padding: 2px 8px;
+    padding: 3px 10px;
     border-radius: 4px;
     font-size: 14px;
   }
@@ -126,6 +101,8 @@
   .date {
     color: #6c757d;
     font-size: 14px;
+    min-width: 90px;
+    text-align: right;
   }
   
   .expense-actions {
@@ -143,10 +120,52 @@
     color: white;
   }
   
-  .edit-btn, .delete-btn {
-    border: none;
-    padding: 6px 12px;
+  .edit-form {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+  }
+  
+  .edit-form input,
+  .edit-form select {
+    padding: 8px;
+    border: 1px solid #ddd;
     border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
+  }
+  
+  .edit-form input[type="number"] {
+    width: 100px;
+  }
+  
+  .save-btn {
+    background: #28a745;
+    color: white;
+  }
+  
+  .cancel-btn {
+    background: #6c757d;
+    color: white;
+  }
+  
+  @media (max-width: 768px) {
+    .expense-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .expense-details {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    
+    .edit-form {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .edit-form input,
+    .edit-form select {
+      width: 100%;
+    }
   }

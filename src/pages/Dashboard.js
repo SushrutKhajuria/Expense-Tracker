@@ -11,7 +11,6 @@ function Dashboard() {
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
-  // Email verification handler
   const handleVerifyEmail = async () => {
     setEmailLoading(true);
     setError('');
@@ -27,12 +26,12 @@ function Dashboard() {
     }
   };
 
-  // Logout handler
   const handleLogout = async () => {
     setLoading(true);
     try {
       await signOut(auth);
       localStorage.removeItem('token');
+      localStorage.removeItem('user'); // Clear persisted user
       navigate('/login');
     } catch (err) {
       console.error('Logout failed:', err);
@@ -42,42 +41,36 @@ function Dashboard() {
   };
 
   return (
-    <div className="dashboard-container">
-      {/* Header Section with Logout */}
-      <header className="dashboard-header">
-        <h2>Welcome to Expense Tracker</h2>
-        <button 
-          className="logout-btn"
-          onClick={handleLogout}
-          disabled={loading}
-        >
+    <div className="dashboard">
+      <div className="dashboard-header">
+        <button className="logout-btn" onClick={handleLogout}>
           {loading ? 'Logging out...' : 'Logout'}
         </button>
-      </header>
+        <h2>Welcome to Expense Tracker!!!</h2>
+      </div>
+      
+      {!auth.currentUser?.emailVerified && (
+        <div className="verify-email-section">
+          <p>Your email is not verified.</p>
+          <button 
+            onClick={handleVerifyEmail} 
+            disabled={emailLoading}
+            className="verify-btn"
+          >
+            {emailLoading ? 'Sending...' : 'Verify Email'}
+          </button>
+          {error && <p className="error">{error}</p>}
+          {success && <p className="success">{success}</p>}
+        </div>
+      )}
 
-      {/* Main Content Area */}
-      <main className="dashboard-content">
-        {/* Navigation to Expense Tracker */}
-        <Link to="/expenses" className="expense-tracker-link">
-          Go to Expense Tracker
+      <div className="dashboard-actions">
+        <Link to="/expenses">
+          <button className="expense-tracker-btn">
+            Go to Expense Tracker
+          </button>
         </Link>
-
-        {/* Email Verification Section */}
-        {!auth.currentUser?.emailVerified && (
-          <div className="verify-email-section">
-            <p>Your email is not verified.</p>
-            <button 
-              onClick={handleVerifyEmail} 
-              disabled={emailLoading}
-              className="verify-btn"
-            >
-              {emailLoading ? 'Sending...' : 'Verify Email'}
-            </button>
-            {error && <p className="error">{error}</p>}
-            {success && <p className="success">{success}</p>}
-          </div>
-        )}
-      </main>
+      </div>
     </div>
   );
 }
