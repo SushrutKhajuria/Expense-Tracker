@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from './store';
 import SignUp from './components/auth/SignUp';
 import Login from './components/auth/Login';
 import Dashboard from './pages/Dashboard';
@@ -12,6 +14,7 @@ import ExpenseTracker from './pages/ExpenseTracker';
 
 function App() {
   return (
+    <Provider store={store}>
     <Router>
       <Routes>
         <Route path="/" element={<SignUp />} />
@@ -31,6 +34,7 @@ function App() {
 
       </Routes>
     </Router>
+    </Provider>
   );
 }
 
