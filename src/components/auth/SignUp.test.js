@@ -1,21 +1,13 @@
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import SignUp from './SignUp';
+import { BrowserRouter } from 'react-router-dom';
 
-test('renders Sign Up heading', () => {
-  render(
-    <MemoryRouter>
-      <SignUp />
-    </MemoryRouter>
-  );
+test('renders sign up heading', () => {
+  render(<BrowserRouter><SignUp /></BrowserRouter>);
   expect(screen.getByText(/Sign Up/i)).toBeInTheDocument();
 });
 
-test('renders Confirm Password input', () => {
-  render(
-    <MemoryRouter>
-      <SignUp />
-    </MemoryRouter>
-  );
-  expect(screen.getByLabelText(/Confirm Password/i)).toBeInTheDocument();
+test('renders confirm password input', () => {
+  render(<BrowserRouter><SignUp /></BrowserRouter>);
+  expect(screen.getByPlaceholderText(/Confirm your password/i)).toBeInTheDocument();
 });

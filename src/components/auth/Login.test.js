@@ -1,21 +1,13 @@
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import Login from './Login';
+import { BrowserRouter } from 'react-router-dom';
 
-test('renders Login heading', () => {
-  render(
-    <MemoryRouter>
-      <Login />
-    </MemoryRouter>
-  );
+test('renders login form', () => {
+  render(<BrowserRouter><Login /></BrowserRouter>);
   expect(screen.getByText(/Login/i)).toBeInTheDocument();
 });
 
-test('renders Forgot Password link', () => {
-  render(
-    <MemoryRouter>
-      <Login />
-    </MemoryRouter>
-  );
+test('renders forgot password link', () => {
+  render(<BrowserRouter><Login /></BrowserRouter>);
   expect(screen.getByText(/Forgot Password/i)).toBeInTheDocument();
 });
